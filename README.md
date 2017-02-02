@@ -1,8 +1,9 @@
 Wily Possum
 ===========
 
-A firewall penatration testing tool suite.
+A firewall penetration testing tool suite.
 
+TODO: build in some network intel.
 
 **Tools**
 
@@ -14,6 +15,23 @@ A firewall penatration testing tool suite.
 
   Layer 7 testing: data exfiltration (in packet data)
 
-- nping scripts?
+- wily-possum.py 
 
-  Validate network connectivity and general packet flow.
+  TODO: should we include nping like functionality, via shell script(s)?
+
+  - Perform firewall tests
+  - Validate network connectivity and general packet flow
+
+
+## Dissembling Ferret
+
+TODO: a word about Dissembling Ferret
+
+## FireAway
+
+TODO: a word about FireAway
+
+## wily-possum.py
+
+TODO: 
+
