@@ -1,0 +1,4 @@
+[submodule "Dissembling-Ferret"]
+	path = Dissembling-Ferret
+	url = git@github.com:clayball/Dissembling-Ferret.git
+	branch = master
