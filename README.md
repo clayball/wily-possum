@@ -5,22 +5,26 @@ A firewall penetration testing tool suite.
 
 TODO: build in some network intel.
 
+Most of these tools and tests was a client/server model where the client is
+internal to the firewall and the server is external to the firewall.
+
 **Tools Included**
 
 - Dissembling Ferret, https://github.com/clayball/Dissembling-Ferret
 
-  Layer 3 testing: covert TCP channels, steganography
+  Layer 3: data exfiltartion using covert TCP channels and steganography
 
 - FireAway, https://github.com/tcstool/Fireaway
 
-  Layer 7 testing: data exfiltration (in packet data)
+  Layer 7: data exfiltration (in packet data)
 
 - wily-possum.py 
 
   TODO: should we include nping like functionality, via shell script(s)?
+        - Perform firewall tests
+        - Validate network connectivity and general packet flow
 
-  - Perform firewall tests
-  - Validate network connectivity and general packet flow
+  Check for the presence of various attack vectors. See the section below for details.
 
 
 ## Dissembling Ferret
@@ -29,9 +33,23 @@ TODO: a word about Dissembling Ferret
 
 ## FireAway
 
-TODO: a word about FireAway
+Next Generation Firewall Audit and Bypass Tool 
+
+(c) 2016 Russell Butturini, https://github.com/tcstool/Fireaway
+
 
 ## wily-possum.py
 
-TODO: 
+If any of the following checks succeed then further action is necessary
+because a *potential* vulnerability is present. For example, all outbound SMB
+connections from the local network to the WAN on TCP ports 139 and 445 and UDP
+port 137 and 138 should be blocked
+
+### Firewall Checks
+
+#### SMB Checks
+
+- outbound TCP ports 139 and 445 (should be blocked)
+- outbound UDP ports 137 and 138 (should be blocked)
+
 

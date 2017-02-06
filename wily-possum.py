@@ -16,8 +16,8 @@ TODO: should we call submodules from here as well?
 
 What capabilities of the firewall do we want to test?
 
-- what gets blocked?
-- what gets through?
+- what gets blocked? (this is too broad)
+- what gets through? (this is too broad)
 - check for TLS MiTM
 
 Options for the various tests:
