@@ -24,7 +24,8 @@ internal to the firewall and the server is external to the firewall.
         - Perform firewall tests
         - Validate network connectivity and general packet flow
 
-  Check for the presence of various attack vectors. See the section below for details.
+  Check for the presence of various attack vectors.
+  See the section below for details.
 
 
 ## Dissembling Ferret
@@ -38,12 +39,15 @@ Next Generation Firewall Audit and Bypass Tool
 (c) 2016 Russell Butturini, https://github.com/tcstool/Fireaway
 
 
-## wily-possum.py
+## wily-possum.py & wily-possum.sh
 
+The shell script includes some initial tests using nping. Lets build on this.
+
+TODO:
 If any of the following checks succeed then further action is necessary
 because a *potential* vulnerability is present. For example, all outbound SMB
 connections from the local network to the WAN on TCP ports 139 and 445 and UDP
-port 137 and 138 should be blocked
+port 137 and 138 should be blocked.
 
 ### Firewall Checks
 
