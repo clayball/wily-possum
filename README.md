@@ -8,6 +8,11 @@ TODO: build in some network intel.
 Most of these tools and tests was a client/server model where the client is
 internal to the firewall and the server is external to the firewall.
 
+The tools that are included as Git submodules can be updated to the most
+recent commit by running the following Git command.
+
+```git submodule update --remote```
+
 **Tools Included**
 
 - Dissembling Ferret, https://github.com/clayball/Dissembling-Ferret
