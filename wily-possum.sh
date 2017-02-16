@@ -22,6 +22,7 @@
 # Options for the various tests:
 #
 
+# TODO: add some check around these and display usage details if these are missing.
 DEST=$1
 PORT=$2
 
