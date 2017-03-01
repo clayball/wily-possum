@@ -20,7 +20,11 @@ What capabilities of the firewall do we want to test?
 - what gets blocked? (this is too broad)
 - what gets through? (this is too broad)
 - check for TLS MiTM
-- test for stateful vs. stateless ?
+- test for stateful vs. stateless [1]
+
+References:
+
+[1] Firewall Fingerprinting TODO: add URL
 
 '''
 
@@ -101,18 +105,9 @@ def main():
     # Iterate over test cases (do we really need to capture the same response
     # multiple times? Would it be worth it to send the packet multiple times
     # and check for variations?
-    #tcases_rst = ['SR', 'SA', 'SE', 'SC']
-    #tcases_ack = ['SA', 'SR', 'SP', 'SE']
     cases = ('SR', 'SA', 'SE', 'SC', 'SP', 'SU')
     count_cases = len(cases)
-    #allcases = [tcases_rst, tcases_ack, tcases_ece]
 
-    #for i, case in enumerate(allcases):
-    #    print '[*] running case %s' % case
-    #    for k, val in enumerate(case):
-    #        print 'case: %s' % val
-    #        res = send_packet(val)
-    #        get_result(res, val)
     for i, case in enumerate(cases):
         print '[*] running case %s' % case
         print 'case: %s' % case
