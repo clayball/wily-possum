@@ -78,7 +78,7 @@ def display_banner():
 
 def send_packet(flags):
     print '[*] sending %s' % flags
-    pkt = IP(dst=dst)/TCP(dport=8080, flags=flags)
+    pkt = IP(dst=dst)/TCP(dport=80, flags=flags)
     res = sr1(pkt, timeout=1)
     return res
 
@@ -105,7 +105,7 @@ def main():
     # Iterate over test cases (do we really need to capture the same response
     # multiple times? Would it be worth it to send the packet multiple times
     # and check for variations?
-    cases = ('SR', 'SA', 'SE', 'SC', 'SP', 'SU')
+    cases = ('SR', 'SA', 'SE', 'SC', 'SP', 'SU', 'A', 'AC', 'AE')
     count_cases = len(cases)
 
     for i, case in enumerate(cases):
@@ -115,14 +115,20 @@ def main():
         r = get_result(res, case)
         count_responses += r
 
-    ratio = count_responses / count_cases
+    ratio = float(count_responses) / float(count_cases)
 
     print '[*] Done.. all tests have been performed.'
     print '[*]'
+    print '               ('
+    print '       (  (  (  )\(                        (     )     '
+    print '       )\))( )\((_)\ )   `  )   (  (  (   ))\   (      '
+    print '      ((_)()((_)_(()/(   /(/(   )\ )\ )\ /((_)  )\     '
+    print '      _(()((_|_) |)(_)) ((_)_\ ((_|(_|(_|_))( _((_))   '
     print '[*] =================================================='
-    print '[*] Summary for target %s' % dst
-    print '[*] Total test cases sent:      %d' % count_cases
+    print '[*]       Summary for target:   %s' % dst
+    print '[*]    Total test cases sent:   %d' % count_cases
     print '[*] Total responses received:   %d' % count_responses
+    print '[*]                    Ratio:   {:.2%}'.format(ratio)
     if ratio < 0.7:
         print '[*] A stateful firewall is likely present.'
     else:
