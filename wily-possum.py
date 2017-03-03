@@ -11,20 +11,28 @@ _(()((_|_) |)(_)) ((_)_\ ((_|(_|(_|_))( _((_))
             |__/  |_|
 
 
-This will run the firewall tests.
+All your packet belong to us.
 
-TODO: implement this using Scapy instead
-
-What capabilities of the firewall do we want to test?
+What firewall capabilities should we test?
+NOTE: We could make this modular so future improvements can be easily added.
 
 - what gets blocked? (this is too broad)
+
 - what gets through? (this is too broad)
+
 - check for TLS MiTM
-- test for stateful vs. stateless [1]
+
+- test for stateful vs. stateless [1], [2]
+
+
+Use cases:
+
+- TODO
 
 References:
 
-[1] Firewall Fingerprinting TODO: add URL
+[1] Nmap, https://www.nmap.org
+[2] Firewall Fingerprinting TODO: add URL
 
 '''
 
@@ -36,23 +44,30 @@ from scapy.all import *
 dst = argv[1]
 
 ofile = "possum-results.log"
-# FIN = 0x1
-# SYN = 0x2
-# RST = 0x4
-# PSH = 0x8
-# ACK = 0x10
-# URG = 0x20
-# ECE = 0x40
-# CWR = 0x80
+# For reference:
+#   FIN = 0x1
+#   SYN = 0x2
+#   RST = 0x4
+#   PSH = 0x8
+#   ACK = 0x10
+#   URG = 0x20
+#   ECE = 0x40
+#   CWR = 0x80
 
-# These are TCP flags we're interested in setting.
+# These are the ones we're interested in.
+S  = 0x2
 SR = 0x6
+A  = 0x10
 SA = 0x12
 SP = 0xa
 SE = 0x42
 SC = 0x82
 
+# EDIT: add your own ports of interest, not necessary
 ports = ('22', '53', '80', '443', '1337', '8080')
+
+# EDIT: add your own decoys, mostly not necessary
+decoys = ('', '8.8.8.8', '')
 
 # ######### FUNCTIONS #########
 def display_banner():
