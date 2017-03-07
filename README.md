@@ -58,6 +58,26 @@ because a *potential* vulnerability is present. For example, all outbound SMB
 connections from the local network to the WAN on TCP ports 139 and 445 and UDP
 port 137 and 138 should be blocked.
 
+### Determining Firewall Rules
+
+TODO: add the following scans and analyze the results appropriately.
+
+- SYN scan
+- ACK scan
+- IPID tricks
+- UDP version scanning
+
+### Bypassing Firewall Rules
+
+TODO: future work
+
+- Source port manipulation
+- IPv6 attacks
+- MAC address spoofing
+- Source routing
+- Taking an alternate path
+  - various tracing techniques to be used 
+
 ### Firewall Checks
 
 #### SMB Checks
