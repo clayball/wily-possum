@@ -2,3 +2,6 @@
 	path = Dissembling-Ferret
 	url = git@github.com:clayball/Dissembling-Ferret.git
 	branch = master
+[submodule "Fireaway"]
+	path = Fireaway
+	url = git@github.com:tcstool/Fireaway.git
