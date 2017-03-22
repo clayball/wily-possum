@@ -78,7 +78,13 @@ TODO: future work
 - Taking an alternate path
   - various tracing techniques to be used 
 
-### Firewall Checks
+### Other Firewall Checks
+
+#### Egress checks
+
+
+#### Ingres checks
+
 
 #### SMB Checks
 
