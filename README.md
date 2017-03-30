@@ -30,8 +30,8 @@ updates will become minimal.
 - wily-possum.py 
 
   TODO: should we include nping like functionality, via shell script(s)?
-        - Perform firewall tests
-        - Validate network connectivity and general packet flow
+  - Perform firewall tests
+  - Validate network connectivity and general packet flow
 
   Check for the presence of various attack vectors.
   See the section below for details.
@@ -39,7 +39,8 @@ updates will become minimal.
 
 ## Dissembling Ferret
 
-TODO: a word about Dissembling Ferret
+Exploiting covert channels in the TCP/IP protocol suite.
+
 
 ## FireAway
 
