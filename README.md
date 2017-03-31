@@ -3,7 +3,6 @@ Wily Possum
 
 A firewall penetration testing tool suite.
 
-TODO: build in some network intel.
 
 Most of these tools/tests are based on a client/server model where the client
 is internal to the firewall and the server is external to the firewall.
@@ -13,9 +12,9 @@ recent commit by running the following Git command.
 
 ```git submodule update --remote```
 
-Run the above command from time to time to get recent updates. Due to the
-nature of Dissembling Ferret, once the project has reached a mature state
-updates will become minimal. 
+Run the above command from time to time to get updates from the submodule
+projects. Due to the fact that Dissembling Ferret uses covert TCP channels,
+once the project has reached a mature state updates will become minimal. 
 
 **Tools Included**
 
@@ -81,13 +80,25 @@ TODO: future work
 
 ### Other Firewall Checks
 
-#### Egress checks
+#### Egress tests
+
+- Can we spoof a request from a remote system by sending SYN-ACK packets?
+  - set sport > 30000
+- Should we attempt to send more than 1000 packet per second for one minute?
+  Not sure if this sort of testing should be included.
+- Should we test for Tor functionality?
+  - Can an internal machine be used as Tor relay?
+
+#### Ingres tests
+
+- Should we test for Tor functionality?
+- Should we test for brute-force alerts?
+- Are there any known ports that should be blocked, e.g. 3306?
 
 
-#### Ingres checks
+#### Samba tests
 
-
-#### SMB Checks
+Does it make sense to have that and/or other Samba tests?
 
 - outbound TCP ports 139 and 445 (should be blocked)
 - outbound UDP ports 137 and 138 (should be blocked)
