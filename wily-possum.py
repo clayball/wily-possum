@@ -19,15 +19,15 @@ NOTE: We could make this modular so future improvements can be easily added.
 - what gets blocked? (this is too broad)
 
 - what gets through? (this is too broad)
+  - Can we send a SA packet in hope of fooling the FW into thinking the flow
+    was initiated from the remote machine?
+
 
 - check for TLS MiTM
 
 - test for stateful vs. stateless [1], [2]
 
 
-Use cases:
-
-- TODO
 
 References:
 
