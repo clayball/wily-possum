@@ -89,6 +89,8 @@ def display_banner():
 # their destination.
 #
 # Stateful firewall will mostly drop the following sets of sequences.
+# Not sure if it's worth it to use and reference the paper that used this
+# approach.
 # SR SA, SR SE, SR SC | SE SR, SE SP, SE SA | SA SR, SA SP, SA SE
 
 def send_packet(flags):
