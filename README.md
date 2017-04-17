@@ -60,12 +60,16 @@ port 137 and 138 should be blocked.
 
 ### Determining Firewall Rules
 
-TODO: add the following scans and analyze the results appropriately.
+TODO: Add the following scans and analyze the results appropriately.
+      Have the ready for #Security2017.
 
 - SYN scan
 - ACK scan
 - IPID tricks
 - UDP version scanning
+
+Run the above scans and analyze the results. Results stored in memory as a
+dict.
 
 ### Bypassing Firewall Rules
 

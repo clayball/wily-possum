@@ -101,6 +101,7 @@ def send_packet(flags):
 
 def get_result(res, val):
     is_response = -1
+    # Did our packet generate a response from the destination?
     if (res):
         is_response = 1
         print '[result] %s, IP.len: %s' % (val, str(res.len))
