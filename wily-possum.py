@@ -13,32 +13,50 @@ _(()((_|_) |)(_)) ((_)_\ ((_|(_|(_|_))( _((_))
 
 All your packet belong to us.
 
-What firewall capabilities should we test?
 NOTE: We could make this modular so future improvements can be easily added.
 
-- what gets blocked? (this is too broad)
+Lets not go too crazy with command-line arguments.
+- target: IP
+- test: basic, full, host
+  basic - port, application, etc.. (TCP, UDP)
+  full  - basic plus egress, ingress (TCP, UDP, ICMP, etc)
+  host  - test host based firewalls (no ingress/egress, etc.)
 
+What firewall capabilities should we test?
+- what gets blocked? (this is too broad)
 - what gets through? (this is too broad)
   - Can we send a SA packet in hope of fooling the FW into thinking the flow
     was initiated from the remote machine?
-
-
 - check for TLS MiTM
-
-- test for stateful vs. stateless [1], [2]
-
-
+- test for stateful vs. stateless [1], [2] (should we bother?)
 
 References:
 
 [1] Nmap, https://www.nmap.org
 [2] Firewall Fingerprinting TODO: add URL
-
 '''
 
 # ######### IMPORTS #########
 from sys import argv
 from scapy.all import *
+import IPy
+from optparse import OptionParser
+
+
+# Use OptionParser just to make the interface and feedback nice
+parser = OptionParser()
+parser.add_option("-d", "--dest", dest="destination_ip", default="foo",
+                  help="Destination IP for the hidden message")
+parser.add_option("-s", "--spoof", dest="spoof_ip", default="66.249.66.1",
+                  help="Spoof the source IP address as this value")
+parser.add_option("-t", "--test", dest="runtest", default="full",
+                  help="Type of test to run [basic|full|host]")
+(options, args) = parser.parse_args()
+
+destination = options.destination_ip
+spoof = options.spoof_ip
+runtest = options.runtest
+
 
 # ######### VARIABLES #########
 dst = argv[1]
@@ -67,7 +85,7 @@ SC = 0x82
 ports = ('22', '53', '80', '443', '1337', '8080')
 
 # EDIT: add your own decoys, mostly not necessary
-decoys = ('', '8.8.8.8', '')
+decoys = ('www.google.com', '8.8.8.8', 'www.bing.com')
 
 # ######### FUNCTIONS #########
 def display_banner():
@@ -93,7 +111,8 @@ def display_banner():
 # approach.
 # SR SA, SR SE, SR SC | SE SR, SE SP, SE SA | SA SR, SA SP, SA SE
 
-def send_packet(flags):
+# Pass all fields of interest to this function
+def send_packet(proto, dst, src, dport, sport, flags, data):
     print '[*] sending %s' % flags
     pkt = IP(dst=dst)/TCP(dport=80, flags=flags)
     res = sr1(pkt, timeout=1)
