@@ -53,14 +53,12 @@ parser.add_option("-t", "--test", dest="runtest", default="full",
                   help="Type of test to run [basic|full|host]")
 (options, args) = parser.parse_args()
 
-destination = options.destination_ip
+dst = options.destination_ip
 spoof = options.spoof_ip
 runtest = options.runtest
 
 
 # ######### VARIABLES #########
-dst = argv[1]
-
 ofile = "possum-results.log"
 # For reference:
 #   FIN = 0x1
@@ -82,10 +80,14 @@ SE = 0x42
 SC = 0x82
 
 # EDIT: add your own ports of interest, not necessary
-ports = ('22', '53', '80', '443', '1337', '8080')
+ports = ('22', '53', '80', '443', '1337')
 
 # EDIT: add your own decoys, mostly not necessary
 decoys = ('www.google.com', '8.8.8.8', 'www.bing.com')
+
+# Hosts used for bouncing packets
+# TODO: add more
+bouncers = ('www.google.com', '8.8.8.8', 'www.bing.com')
 
 # ######### FUNCTIONS #########
 def display_banner():
@@ -118,6 +120,12 @@ def send_packet(proto, dst, src, dport, sport, flags, data):
     res = sr1(pkt, timeout=1)
     return res
 
+def simple_scan(flags):
+    print '[*] sending %s' % flags
+    pkt = IP(dst=dst)/TCP(dport=80, flags=flags)
+    res = sr1(pkt, timeout=1)
+    return res
+
 def get_result(res, val):
     is_response = -1
     # Did our packet generate a response from the destination?
@@ -130,6 +138,36 @@ def get_result(res, val):
         print '[-] No response to %s' % val
         out.write('[DEADflag] ' + val + '\n')
     return is_response
+
+
+# ##### TCP scans #####
+def syn_scans():
+    # Run all SYN scans
+    print '[+] Performing SYN scans..'
+
+def ack_scans():
+    # Run all ACK scans
+    print '[+] Performing ACK scans..'
+
+def bounce_tcp():
+    # Run TCP bounce scans
+    print '[+] Performing bounce scans..'
+
+# ##### UDP scans #####
+def udp_scans():
+    # Run all UDP scans
+    print '[+] Performing UDP scans..'
+
+# ##### ARP scans #####
+# TODO: hold off on this one
+def arp_scans():
+    # Run ARP probe scans
+    print '[+] Performing ARP scans..'
+
+# ##### ICMP scans #####
+def bounce_icmp():
+    # Run ICMP bounce scans
+    print '[+] Performing ICMP scans..'
 
 
 # ######### MAIN PROGRAM #########
@@ -148,7 +186,7 @@ def main():
     for i, case in enumerate(cases):
         print '[*] running case %s' % case
         print 'case: %s' % case
-        res = send_packet(case)
+        res = simple_scan(case)
         r = get_result(res, case)
         count_responses += r
 
