@@ -43,10 +43,12 @@ import IPy
 from optparse import OptionParser
 
 
-# Use OptionParser just to make the interface and feedback nice
+# Use OptionParser to make the interface and feedback nice
 parser = OptionParser()
 parser.add_option("-d", "--dest", dest="destination_ip", default="foo",
-                  help="Destination IP for the hidden message")
+                  help="Destination IP to run scans against")
+parser.add_option("-p", "--port", dest="destination_port", default="443",
+                  help="Destination port")
 parser.add_option("-s", "--spoof", dest="spoof_ip", default="66.249.66.1",
                   help="Spoof the source IP address as this value")
 parser.add_option("-t", "--test", dest="runtest", default="full",
@@ -54,12 +56,13 @@ parser.add_option("-t", "--test", dest="runtest", default="full",
 (options, args) = parser.parse_args()
 
 dst = options.destination_ip
+dport = options.destination_port
 spoof = options.spoof_ip
 runtest = options.runtest
+#src = '127.0.0.1' ## USE FOR TESTING LOCALLY
 
-
-# ######### VARIABLES #########
-ofile = "possum-results.log"
+# ######### GLOBAL VARIABLES #########
+ofile = dst + dport + "-results.log"
 # For reference:
 #   FIN = 0x1
 #   SYN = 0x2
@@ -120,30 +123,41 @@ def send_packet(proto, dst, src, dport, sport, flags, data):
     res = sr1(pkt, timeout=1)
     return res
 
+# This was the first scan implemented and works OK so leaving it here for now.
 def simple_scan(flags):
     print '[*] sending %s' % flags
     pkt = IP(dst=dst)/TCP(dport=80, flags=flags)
     res = sr1(pkt, timeout=1)
     return res
 
-def get_result(res, val):
+def get_result(res, flags):
     is_response = -1
     # Did our packet generate a response from the destination?
     if (res):
         is_response = 1
-        print '[result] %s, IP.len: %s' % (val, str(res.len))
-        out.write('[response] ' + val + '\n')
+        print '[result] %s, IP.len: %s' % (flags, str(res.len))
+        out.write('[response] ' + flags + '\n')
     else:
         is_response = 0
-        print '[-] No response to %s' % val
-        out.write('[DEADflag] ' + val + '\n')
+        print '[-] No response to %s' % flags
+        out.write('[DEADflag] ' + flags + '\n')
     return is_response
 
 
 # ##### TCP scans #####
-def syn_scans():
+def syn_scans(dst, dport):
     # Run all SYN scans
-    print '[+] Performing SYN scans..'
+    #src_ports = [ 41337, 32337, 21, 22, 80 ]
+    flags = [ 'S', 'A', 'P', 'F', 'R' ]
+    print '[*] Performing SYN scans..'
+
+    for f in flags:
+        print '[*]   dst: %s, dport: %d, flags: %s' % (dst, int(dport), f)
+        pkt = IP(dst=dst)/TCP(dport=int(dport), flags=f)
+        response = sr1(pkt, timeout=1)
+        outcome = get_result(response, f)
+        print '[*] Outcome for %s: %d\n' % (f, outcome)
+
 
 def ack_scans():
     # Run all ACK scans
@@ -180,6 +194,8 @@ def main():
     # Iterate over test cases (do we really need to capture the same response
     # multiple times? Would it be worth it to send the packet multiple times
     # and check for variations?
+
+    '''
     cases = ('SR', 'SA', 'SE', 'SC', 'SP', 'SU', 'A', 'AC', 'AE')
     count_cases = len(cases)
 
@@ -191,6 +207,10 @@ def main():
         count_responses += r
 
     ratio = float(count_responses) / float(count_cases)
+    '''
+
+    # Run our other scans
+    syn_scans(dst, dport)
 
     print '[*] Done.. all tests have been performed.'
     print '[*]'
@@ -201,13 +221,13 @@ def main():
     print '      _(()((_|_) |)(_)) ((_)_\ ((_|(_|(_|_))( _((_))   '
     print '[*] =================================================='
     print '[*]       Summary for target:   %s' % dst
-    print '[*]    Total test cases sent:   %d' % count_cases
-    print '[*] Total responses received:   %d' % count_responses
-    print '[*]                    Ratio:   {:.2%}'.format(ratio)
-    if ratio < 0.7:
-        print '[*] A stateful firewall is likely present.'
-    else:
-        print '[*] A stateless firewall, if any, is likely present.'
+    #print '[*]    Total test cases sent:   %d' % count_cases
+    #print '[*] Total responses received:   %d' % count_responses
+    #print '[*]                    Ratio:   {:.2%}'.format(ratio)
+    #if ratio < 0.7:
+    #    print '[*] A stateful firewall is likely present.'
+    #else:
+    #    print '[*] A stateless firewall, if any, is likely present.'
     print '[*] =================================================='
 
 
