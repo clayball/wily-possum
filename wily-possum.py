@@ -62,7 +62,7 @@ runtest = options.runtest
 #src = '127.0.0.1' ## USE FOR TESTING LOCALLY
 
 # ######### GLOBAL VARIABLES #########
-ofile = dst + dport + "-results.log"
+ofile = "results-" + dst + "-" + dport + ".log"
 # For reference:
 #   FIN = 0x1
 #   SYN = 0x2
@@ -94,7 +94,7 @@ bouncers = ('www.google.com', '8.8.8.8', 'www.bing.com')
 
 # ######### FUNCTIONS #########
 def display_banner():
-    print ' \n'
+    print ' '
     print '          ('
     print '  (  (  (  )\(                        (     )     '
     print '  )\))( )\((_)\ )   `  )   (  (  (   ))\   (      '
@@ -103,9 +103,9 @@ def display_banner():
     print ' \ V  V / | | || | | \'_ \) _ (_-<_-< || | \'  \()' 
     print '  \_/\_/|_|_|\_, | | .__/\___/__/__/\_,_|_|_|_|   '
     print '             |__/  |_| '
-    print ''
+    print ' '
     print ' Firewall Testing Suite'
-    print '\n'
+    print ' '
 
 
 # Determine stateful/stateless firewall based on packet sequences reaching
@@ -143,45 +143,42 @@ def get_result(res, flags):
         out.write('[DEADflag] ' + flags + '\n')
     return is_response
 
+flags = [ 'S', 'A', 'P', 'F', 'R' ]
+# Initializing to 2 since this will be set to 1 or 0 later.
+results_syn = { 'S': 2,
+                'A': 2,
+                'P': 2,
+                'F': 2,
+                'R': 2}
 
-# ##### TCP scans #####
-def syn_scans(dst, dport):
-    # Run all SYN scans
-    #src_ports = [ 41337, 32337, 21, 22, 80 ]
-    flags = [ 'S', 'A', 'P', 'F', 'R' ]
-    print '[*] Performing SYN scans..'
-
+def tcp_flag_scans(dst, dport):
+    print '[*] Performing TCP flag scans..'
     for f in flags:
         print '[*]   dst: %s, dport: %d, flags: %s' % (dst, int(dport), f)
         pkt = IP(dst=dst)/TCP(dport=int(dport), flags=f)
         response = sr1(pkt, timeout=1)
         outcome = get_result(response, f)
+        results_syn[f] = outcome
         print '[*] Outcome for %s: %d\n' % (f, outcome)
 
-
-def ack_scans():
-    # Run all ACK scans
-    print '[+] Performing ACK scans..'
+def tcp_syn_scans():
+    print '[+] Performing TCP SYN scans..'
 
 def bounce_tcp():
-    # Run TCP bounce scans
     print '[+] Performing bounce scans..'
 
-# ##### UDP scans #####
 def udp_scans():
-    # Run all UDP scans
     print '[+] Performing UDP scans..'
 
-# ##### ARP scans #####
 # TODO: hold off on this one
 def arp_scans():
-    # Run ARP probe scans
     print '[+] Performing ARP scans..'
 
-# ##### ICMP scans #####
+def icmp_scans():
+    print '[*] Performing ICMP scans..'
+
 def bounce_icmp():
-    # Run ICMP bounce scans
-    print '[+] Performing ICMP scans..'
+    print '[+] Performing ICMP bounce scans..'
 
 
 # ######### MAIN PROGRAM #########
@@ -210,25 +207,31 @@ def main():
     '''
 
     # Run our other scans
-    syn_scans(dst, dport)
+    tcp_flag_scans(dst, dport)
 
-    print '[*] Done.. all tests have been performed.'
-    print '[*]'
-    print '               ('
-    print '       (  (  (  )\(                        (     )     '
-    print '       )\))( )\((_)\ )   `  )   (  (  (   ))\   (      '
-    print '      ((_)()((_)_(()/(   /(/(   )\ )\ )\ /((_)  )\     '
-    print '      _(()((_|_) |)(_)) ((_)_\ ((_|(_|(_|_))( _((_))   '
-    print '[*] =================================================='
-    print '[*]       Summary for target:   %s' % dst
-    #print '[*]    Total test cases sent:   %d' % count_cases
-    #print '[*] Total responses received:   %d' % count_responses
-    #print '[*]                    Ratio:   {:.2%}'.format(ratio)
+    print ' '
+    print ' '
+    print '            ('
+    print '    (  (  (  )\(                        (     )     '
+    print '    )\))( )\((_)\ )   `  )   (  (  (   ))\   (      '
+    print '   ((_)()((_)_(()/(   /(/(   )\ )\ )\ /((_)  )\     '
+    print '   _(()((_|_) |)(_)) ((_)_\ ((_|(_|(_|_))( _((_))   '
+    print '===================================================='
+    print ' Results for target:  %s:%d' % (dst, int(dport))
+    print ' '
+    #print '    Total test cases sent:   %d' % count_cases
+    #print ' Total responses received:   %d' % count_responses
+    #print '                    Ratio:   {:.2%}'.format(ratio)
     #if ratio < 0.7:
-    #    print '[*] A stateful firewall is likely present.'
+    #    print ' A stateful firewall is likely present.'
     #else:
-    #    print '[*] A stateless firewall, if any, is likely present.'
-    print '[*] =================================================='
+    #    print ' A stateless firewall, if any, is likely present.'
+    print ' TCP Flag Scan'
+    print ' '
+    for flag, outcome in results_syn.iteritems():
+        if outcome == 1:
+            print '   %s, %d' % (flag, outcome)
+    print '===================================================='
 
 
 if __name__ == '__main__':
