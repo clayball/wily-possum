@@ -11,7 +11,6 @@ _(()((_|_) |)(_)) ((_)_\ ((_|(_|(_|_))( _((_))
             |__/  |_|
 
 
-All your packet belong to us.
 
 NOTE: We could make this modular so future improvements can be easily added.
 
@@ -73,7 +72,10 @@ ofile = "results-" + dst + "-" + dport + ".log"
 #   ECE = 0x40
 #   CWR = 0x80
 
-# These are the ones we're interested in.
+# TODO: should the following settings be in a config file?
+# 
+# These are the TCP flags we're interested in setting.
+# Add more if you'd like run other types of tests.
 S  = 0x2
 SR = 0x6
 A  = 0x10
@@ -83,14 +85,16 @@ SE = 0x42
 SC = 0x82
 
 # EDIT: add your own ports of interest, not necessary
-ports = ('22', '53', '80', '443', '1337')
+ports = ('22', '53', '80', '443', '8080')
 
+# TODO: We could query atlas.torproject and specify exit nodes as decoys.
 # EDIT: add your own decoys, mostly not necessary
 decoys = ('www.google.com', '8.8.8.8', 'www.bing.com')
 
 # Hosts used for bouncing packets
-# TODO: add more
+# TODO: add more.? 
 bouncers = ('www.google.com', '8.8.8.8', 'www.bing.com')
+
 
 # ######### FUNCTIONS #########
 def display_banner():
@@ -130,6 +134,10 @@ def simple_scan(flags):
     res = sr1(pkt, timeout=1)
     return res
 
+# TODO: see notes below.
+# We'll be running various tests and will want to compare results of those
+# tests. We need a data structure to capture our results for each test.
+# The results_syn structure seems to work.
 def get_result(res, flags):
     is_response = -1
     # Did our packet generate a response from the destination?
@@ -161,12 +169,24 @@ def tcp_flag_scans(dst, dport):
         results_syn[f] = outcome
         print '[*] Outcome for %s: %d\n' % (f, outcome)
 
+##### TCP scans #####
+
+## SYN
 def tcp_syn_scans():
     print '[+] Performing TCP SYN scans..'
 
 def bounce_tcp():
     print '[+] Performing bounce scans..'
 
+## ACK
+
+# TODO
+
+## RST
+
+# TODO
+
+##### UDP scans #####
 def udp_scans():
     print '[+] Performing UDP scans..'
 
@@ -174,6 +194,8 @@ def udp_scans():
 def arp_scans():
     print '[+] Performing ARP scans..'
 
+
+##### ICMP scans #####
 def icmp_scans():
     print '[*] Performing ICMP scans..'
 
@@ -203,6 +225,8 @@ def main():
         r = get_result(res, case)
         count_responses += r
 
+    # if we're going to use this we need to make sure we can defend why we're
+    # checking this value and what it means (must be verifiable).
     ratio = float(count_responses) / float(count_cases)
     '''
 
