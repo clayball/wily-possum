@@ -60,6 +60,9 @@ spoof = options.spoof_ip
 runtest = options.runtest
 #src = '127.0.0.1' ## USE FOR TESTING LOCALLY
 
+# TODO: add check for required options
+
+
 # ######### GLOBAL VARIABLES #########
 ofile = "results-" + dst + "-" + dport + ".log"
 # For reference:
